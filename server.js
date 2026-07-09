@@ -11,8 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
-
 app.get("/", (req, res) => {
   res.send("API is running");
 });
@@ -79,14 +77,17 @@ app.get("/articles/:id", async (req, res) => {
 //UPDATE AN ARTICLE BY ID
 app.patch("/articles/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-    const author = req.body.author;
-    await articleModel.findByIdAndUpdate(id, author);
-
-    res.status(200).json({
-      message: "article found by id and updated",
-      article: articles,
-    });
+    if (
+      !(await articleModel.findByIdAndUpdate(req.params.id, req.body))
+    ) {
+      res.status(404).json({
+        message: "article not found",
+      });
+    } else {
+      res.status(200).json({
+        message: "article found by id and updated",
+      });
+    }
   } catch {
     (error) => {
       res.status(500).json({
@@ -116,6 +117,8 @@ app.delete("/articles/:id", async (req, res) => {
     };
   }
 });
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
