@@ -16,12 +16,12 @@ app.get("/", (req, res) => {
 });
 
 //CREATE AN ARTICLE
-app.post("/articles", async (req, res) => {
+app.post("/createarticle", async (req, res) => {
   try {
     await articleModel.create(req.body);
 
     res.status(200).json({
-      message: "articles created",
+      message: "article created",
     });
   } catch {
     (error) => {
@@ -33,7 +33,7 @@ app.post("/articles", async (req, res) => {
 });
 
 //GET ALL THE ARTICLES
-app.get("/articles", async (req, res) => {
+app.get("/getarticles", async (req, res) => {
   try {
     const articles = await articleModel.find();
 
@@ -51,7 +51,7 @@ app.get("/articles", async (req, res) => {
 });
 
 //GET THE ARTICLES BY ID
-app.get("/articles/:id", async (req, res) => {
+app.get("/getarticlebyid/:id", async (req, res) => {
   try {
     const articles = await articleModel.findById(req.params.id);
 
@@ -75,7 +75,7 @@ app.get("/articles/:id", async (req, res) => {
 });
 
 //UPDATE AN ARTICLE BY ID
-app.patch("/articles/:id", async (req, res) => {
+app.patch("/updatearticlebyid/:id", async (req, res) => {
   try {
     if (
       !(await articleModel.findByIdAndUpdate(req.params.id, req.body))
@@ -98,7 +98,7 @@ app.patch("/articles/:id", async (req, res) => {
 });
 
 ////DELETE AN ARTICLE BY ID
-app.delete("/articles/:id", async (req, res) => {
+app.delete("/deletearticlebyid/:id", async (req, res) => {
   try {
     if (!(await articleModel.findByIdAndDelete(req.params.id))) {
       res.status(404).json({
